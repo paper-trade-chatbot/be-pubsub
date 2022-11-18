@@ -75,6 +75,11 @@ type PublisherConfig struct {
 	//
 	// type of this exchange
 	ExchangeType RABBITMQ_EXCHANGE_TYPE
+
+	// MaxRetryCount
+	//
+	// fail after retry over this count
+	MaxRetryCount int
 }
 
 func (PublisherConfig) isConfig() {}

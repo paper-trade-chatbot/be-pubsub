@@ -43,10 +43,17 @@ func NewPublisher[T interface{}](config *PublisherConfig, this Publisher[T]) (*P
 	publisher.Log("publisher created! [%s][%s]", publisher.GetExchangeName(), publisher.GetRoutingKey())
 
 	go func() {
+		maxRetryCount := 10
+		if config.MaxRetryCount > 0 {
+			maxRetryCount = config.MaxRetryCount
+		}
 		for {
 			select {
 			case j := <-publisher.Jobs:
-				publisher.Log("publish [%s][%s] message: %s", publisher.GetExchangeName(), publisher.GetRoutingKey(), string(j.Message.Body))
+				if j.RetryCount > maxRetryCount {
+					publisher.Log("Failed to publish [%s][%s] over retry count %d. stop retry.", publisher.GetExchangeName(), publisher.GetRoutingKey(), j.RetryCount)
+					continue
+				}
 				err = publisher.Channel.Publish(
 					publisher.GetExchangeName(), // exchange
 					publisher.GetRoutingKey(),   // routing key
