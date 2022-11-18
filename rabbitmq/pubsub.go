@@ -34,12 +34,17 @@ func NewPubsub(config Config, this Pubsub) (*PubsubImpl, error) {
 	pubsub.Connection = connection
 	pubsub.Channel = channel
 
+	ctx, cancel := context.WithCancel(pubsub.Context)
+	pubsub.Context = ctx
+	pubsub.CancelFunc = cancel
+
 	return pubsub, nil
 }
 
 type PubsubImpl struct {
-	Context context.Context
-	Config  Config
+	Context    context.Context
+	CancelFunc context.CancelFunc
+	Config     Config
 	Pubsub
 	LogMode    bool
 	Connection *amqp.Connection
@@ -62,6 +67,7 @@ func (p *PubsubImpl) Log(format string, a ...any) {
 }
 
 func (p *PubsubImpl) Close() error {
+	p.CancelFunc()
 	p.Channel.Close()
 	p.Connection.Close()
 	return nil
