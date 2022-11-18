@@ -5,9 +5,9 @@ import (
 	"github.com/paper-trade-chatbot/be-pubsub/rabbitmq/json"
 )
 
-func NewPublisher(username, password, host, virualHost string) (*json.PublisherImpl[*NewPositionModel], error) {
+func NewPublisher(username, password, host, virualHost string) (*json.PublisherImpl[*OpenPositionModel], error) {
 
-	publisher, err := json.NewPublisher[*NewPositionModel](
+	publisher, err := json.NewPublisher[*OpenPositionModel](
 		&rabbitmq.PublisherConfig{
 			ConfigImpl: rabbitmq.ConfigImpl{
 				Username:    username,

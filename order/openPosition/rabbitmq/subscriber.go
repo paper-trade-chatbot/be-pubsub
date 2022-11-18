@@ -3,13 +3,13 @@ package rabbitmq
 import (
 	"context"
 
-	rfPubsub "github.com/paper-trade-chatbot/be-pubsub"
+	bePubsub "github.com/paper-trade-chatbot/be-pubsub"
 	"github.com/paper-trade-chatbot/be-pubsub/rabbitmq"
 	"github.com/paper-trade-chatbot/be-pubsub/rabbitmq/json"
 )
 
-func NewSubscriber(username, password, host, virualHost, consumer string) (*json.SubscriberImpl[*NewPositionModel], error) {
-	subscriber, err := json.NewSubscriber[*NewPositionModel](
+func NewSubscriber(username, password, host, virualHost, consumer string) (*json.SubscriberImpl[*OpenPositionModel], error) {
+	subscriber, err := json.NewSubscriber[*OpenPositionModel](
 		&rabbitmq.SubscriberConfig{
 			ConfigImpl: rabbitmq.ConfigImpl{
 				Username:    username,
@@ -34,9 +34,9 @@ func NewSubscriber(username, password, host, virualHost, consumer string) (*json
 // SubscribeAndListen
 //
 // model must be a pointer to a struct, otherwise it won't work
-func SubscribeAndListen(ctx context.Context, username, password, host, virualHost, consumer string, callbacks ...func(*NewPositionModel) error) (rfPubsub.TSubscriber[*NewPositionModel], error) {
+func SubscribeAndListen(ctx context.Context, username, password, host, virualHost, consumer string, callbacks ...func(*OpenPositionModel) error) (bePubsub.TSubscriber[*OpenPositionModel], error) {
 	if len(callbacks) == 0 {
-		return nil, rfPubsub.ListenNullCallback
+		return nil, bePubsub.ListenNullCallback
 	}
 
 	sub, err := NewSubscriber(username, password, host, virualHost, consumer)
