@@ -5,6 +5,7 @@ import "context"
 type Pubsub interface {
 	SetLogMode(bool)
 	Log(string, ...any)
+	Close() error
 }
 
 type Publisher interface {

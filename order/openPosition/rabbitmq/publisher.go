@@ -16,7 +16,7 @@ func NewPublisher(username, password, host, virualHost string) (*json.PublisherI
 				VirtualHost: virualHost,
 				Exported:    rabbitmq.RABBITMQ_EXPORTED_PRIVATE,
 				Domain:      []string{"order"},
-				Dataset:     "newPosition",
+				Dataset:     "openPosition",
 				ContentType: rabbitmq.RABBITMQ_CONTENT_TYPE_JSON,
 			},
 			ExchangeName: "order",
