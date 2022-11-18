@@ -2,6 +2,8 @@ package pubsub
 
 import "context"
 
+var LogMode bool = false
+
 type Pubsub interface {
 	SetLogMode(bool)
 	Log(string, ...any)

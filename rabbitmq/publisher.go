@@ -28,12 +28,25 @@ func NewPublisher[T interface{}](config *PublisherConfig, this Publisher[T]) (*P
 		Jobs:       make(chan *PublishJob, 128),
 	}
 
+	if _, err = publisher.Channel.QueueDeclare(
+		publisher.GetRoutingKey(), // name
+		false,                     // durable
+		false,                     // delete when unused
+		false,                     // exclusive
+		false,                     // no-wait
+		nil,                       // arguments
+	); err != nil {
+		publisher.Log("channel[%s] declare failed", publisher.GetRoutingKey())
+		return nil, err
+	}
+
 	publisher.Log("publisher created! [%s][%s]", publisher.GetExchangeName(), publisher.GetRoutingKey())
 
 	go func() {
 		for {
 			select {
 			case j := <-publisher.Jobs:
+				publisher.Log("publish [%s][%s] message: %s", publisher.GetExchangeName(), publisher.GetRoutingKey(), string(j.Message.Body))
 				err = publisher.Channel.Publish(
 					publisher.GetExchangeName(), // exchange
 					publisher.GetRoutingKey(),   // routing key

@@ -5,13 +5,15 @@ import (
 	"fmt"
 	"sync"
 
+	pubsub "github.com/paper-trade-chatbot/be-pubsub"
 	"github.com/streadway/amqp"
 )
 
 func NewPubsub(config Config, this Pubsub) (*PubsubImpl, error) {
 	pubsub := &PubsubImpl{
-		Config: config,
-		Pubsub: this,
+		Config:  config,
+		Pubsub:  this,
+		LogMode: pubsub.LogMode,
 	}
 
 	url := "amqp://" + config.getUsername() + ":" + config.getPassord() + "@" + config.GetHost()
@@ -34,7 +36,7 @@ func NewPubsub(config Config, this Pubsub) (*PubsubImpl, error) {
 	pubsub.Connection = connection
 	pubsub.Channel = channel
 
-	ctx, cancel := context.WithCancel(pubsub.Context)
+	ctx, cancel := context.WithCancel(context.Background())
 	pubsub.Context = ctx
 	pubsub.CancelFunc = cancel
 
@@ -61,7 +63,7 @@ func (p *PubsubImpl) SetLogMode(on bool) {
 
 func (p *PubsubImpl) Log(format string, a ...any) {
 	if p.LogMode {
-		fmt.Printf("rabbitmq: "+format, a)
+		fmt.Printf("rabbitmq: "+format, a...)
 		fmt.Println()
 	}
 }
