@@ -23,13 +23,13 @@ type Subscriber interface {
 }
 
 type TPublisher[T interface{}] interface {
+	Pubsub
 	Produce(context.Context, T, ...interface{}) (interface{}, error)
-	Close() error
 }
 
 type TSubscriber[T interface{}] interface {
+	Pubsub
 	Listen(context.Context, ...interface{}) error
 	Consume(context.Context, T, ...interface{}) (interface{}, error)
 	Subscribe(context.Context, func(T) error) error
-	Close() error
 }
