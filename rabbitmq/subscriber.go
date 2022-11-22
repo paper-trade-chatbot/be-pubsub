@@ -13,7 +13,7 @@ type SubscriberImpl[T interface{}] struct {
 	PubsubImpl
 	ListenMutex *sync.RWMutex
 	Delivery    <-chan amqp.Delivery
-	Callbacks   []func(T) error
+	Callbacks   []func(context.Context, T) error
 }
 
 func NewSubscriber[T interface{}](config *SubscriberConfig, this Subscriber[T]) (*SubscriberImpl[T], error) {
@@ -58,7 +58,7 @@ func NewSubscriber[T interface{}](config *SubscriberConfig, this Subscriber[T]) 
 	return subscriber, nil
 }
 
-func (s *SubscriberImpl[T]) Subscribe(ctx context.Context, callback func(T) error) error {
+func (s *SubscriberImpl[T]) Subscribe(ctx context.Context, callback func(context.Context, T) error) error {
 	s.Callbacks = append(s.Callbacks, callback)
 	return nil
 }

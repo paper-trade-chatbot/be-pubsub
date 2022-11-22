@@ -31,5 +31,5 @@ type TSubscriber[T interface{}] interface {
 	Pubsub
 	Listen(context.Context, ...interface{}) error
 	Consume(context.Context, T, ...interface{}) (interface{}, error)
-	Subscribe(context.Context, func(T) error) error
+	Subscribe(context.Context, func(context.Context, T) error) error
 }

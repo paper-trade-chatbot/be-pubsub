@@ -34,7 +34,7 @@ func NewSubscriber(username, password, host, virualHost, consumer string) (*json
 // SubscribeAndListen
 //
 // model must be a pointer to a struct, otherwise it won't work
-func SubscribeAndListen(ctx context.Context, username, password, host, virualHost, consumer string, callbacks ...func(*OpenPositionModel) error) (bePubsub.TSubscriber[*OpenPositionModel], error) {
+func SubscribeAndListen(ctx context.Context, username, password, host, virualHost, consumer string, callbacks ...func(context.Context, *OpenPositionModel) error) (bePubsub.TSubscriber[*OpenPositionModel], error) {
 	if len(callbacks) == 0 {
 		return nil, bePubsub.ListenNullCallback
 	}

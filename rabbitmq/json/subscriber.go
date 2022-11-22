@@ -80,7 +80,7 @@ func (s *SubscriberImpl[T]) Listen(ctx context.Context, args ...interface{}) err
 								continue
 							}
 
-							if err := f(model); err != nil {
+							if err := f(ctx, model); err != nil {
 								s.Log("error: Callback err:%v\n", err)
 								continue
 							}
