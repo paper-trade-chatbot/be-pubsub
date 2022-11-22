@@ -51,7 +51,7 @@ func (s *SubscriberImpl[T]) Listen(ctx context.Context, args ...interface{}) err
 
 	go func() {
 		defer s.ListenMutex.Unlock()
-
+		s.Log("start listening to %s by %s...", s.GetQueueName(), s.GetConsumer())
 		for {
 			func() {
 				defer func() {
@@ -61,36 +61,33 @@ func (s *SubscriberImpl[T]) Listen(ctx context.Context, args ...interface{}) err
 					}
 				}()
 
-				s.Log("start listening to %s by %s...", s.GetQueueName(), s.GetConsumer())
-				for {
+				select {
+				case d := <-s.Delivery:
 
-					select {
-					case d := <-s.Delivery:
-
-						s.Log("message: %s", string(d.Body))
-						for _, f := range s.Callbacks {
-							var model T
-							if err := json.Unmarshal(d.Body, model); err != nil {
-								s.Log("error: failed to unmarshal. %v", err)
-								continue
-							}
-
-							if _, err := govalidator.ValidateStruct(model); err != nil {
-								s.Log("error: ValidateStruct err:%v\n", err)
-								continue
-							}
-
-							if err := f(ctx, model); err != nil {
-								s.Log("error: Callback err:%v\n", err)
-								continue
-							}
-
+					s.Log("message: %s", string(d.Body))
+					for _, f := range s.Callbacks {
+						var model T
+						if err := json.Unmarshal(d.Body, model); err != nil {
+							s.Log("error: failed to unmarshal. %v", err)
+							continue
 						}
-					case <-s.Context.Done():
-						s.Log("subscriber [%s][%s] terminated.", s.GetQueueName(), s.GetConsumer())
-						return
+
+						if _, err := govalidator.ValidateStruct(model); err != nil {
+							s.Log("error: ValidateStruct err:%v\n", err)
+							continue
+						}
+
+						if err := f(ctx, model); err != nil {
+							s.Log("error: Callback err:%v\n", err)
+							continue
+						}
+
 					}
+				case <-s.Context.Done():
+					s.Log("subscriber [%s][%s] terminated.", s.GetQueueName(), s.GetConsumer())
+					return
 				}
+
 			}()
 		}
 	}()

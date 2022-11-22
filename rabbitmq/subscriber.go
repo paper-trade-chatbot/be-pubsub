@@ -23,7 +23,8 @@ func NewSubscriber[T interface{}](config *SubscriberConfig, this Subscriber[T]) 
 	}
 
 	subscriber := &SubscriberImpl[T]{
-		PubsubImpl: *pubsub,
+		PubsubImpl:  *pubsub,
+		ListenMutex: &sync.RWMutex{},
 	}
 
 	if _, err := pubsub.Channel.QueueDeclare(
