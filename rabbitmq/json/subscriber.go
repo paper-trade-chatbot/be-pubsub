@@ -53,7 +53,7 @@ func (s *SubscriberImpl[T]) Listen(ctx context.Context, args ...interface{}) err
 		defer s.ListenMutex.Unlock()
 		s.Log("start listening to %s by %s...", s.GetQueueName(), s.GetConsumer())
 		for {
-			func() {
+			if func() int {
 				defer func() {
 					if err := recover(); err != nil {
 						s.Log("Listen panic:", err)
@@ -87,10 +87,12 @@ func (s *SubscriberImpl[T]) Listen(ctx context.Context, args ...interface{}) err
 					}
 				case <-s.Context.Done():
 					s.Log("subscriber [%s][%s] terminated.", s.GetQueueName(), s.GetConsumer())
-					return
+					return 1
 				}
-
-			}()
+				return 0
+			}() == 1 {
+				return
+			}
 		}
 	}()
 
