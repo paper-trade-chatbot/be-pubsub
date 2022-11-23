@@ -67,6 +67,8 @@ func (s *SubscriberImpl[T]) Listen(ctx context.Context, args ...interface{}) err
 					s.Log("message: %s", string(d.Body))
 					for _, f := range s.Callbacks {
 						var model T
+						modelType := reflect.TypeOf(model).Elem()
+						model = reflect.New(modelType).Interface().(T)
 						if err := json.Unmarshal(d.Body, model); err != nil {
 							s.Log("error: failed to unmarshal. %v", err)
 							continue
