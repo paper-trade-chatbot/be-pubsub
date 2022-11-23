@@ -18,7 +18,7 @@ func NewSubscriber(username, password, host, virualHost, consumer string) (*json
 				VirtualHost: virualHost,
 				Exported:    rabbitmq.RABBITMQ_EXPORTED_PRIVATE,
 				Domain:      []string{"order"},
-				Dataset:     "newPosition",
+				Dataset:     "openPosition",
 				ContentType: rabbitmq.RABBITMQ_CONTENT_TYPE_JSON,
 			},
 			Consumer: consumer,

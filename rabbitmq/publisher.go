@@ -30,7 +30,7 @@ func NewPublisher[T interface{}](config *PublisherConfig, this Publisher[T]) (*P
 
 	if _, err = publisher.Channel.QueueDeclare(
 		publisher.GetRoutingKey(), // name
-		false,                     // durable
+		true,                      // durable
 		false,                     // delete when unused
 		false,                     // exclusive
 		false,                     // no-wait

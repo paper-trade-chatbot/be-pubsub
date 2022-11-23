@@ -29,7 +29,7 @@ func NewSubscriber[T interface{}](config *SubscriberConfig, this Subscriber[T]) 
 
 	if _, err := pubsub.Channel.QueueDeclare(
 		subscriber.GetQueueName(), // name
-		false,                     // durable
+		true,                      // durable
 		false,                     // delete when unused
 		false,                     // exclusive
 		false,                     // no-wait
