@@ -29,8 +29,6 @@ import (
 	"reflect"
 	"sync"
 
-	"github.com/Funzhou-tech/rf-payment/config"
-	"github.com/Funzhou-tech/rf-payment/logging"
 	rfPubsub "github.com/paper-trade-chatbot/be-pubsub"
 )
 
@@ -128,8 +126,6 @@ import (
 	"reflect"
 	"sync"
 
-	"github.com/Funzhou-tech/rf-payment/config"
-	"github.com/Funzhou-tech/rf-payment/logging"
 	rfPubsub "github.com/paper-trade-chatbot/be-pubsub"
 	"github.com/paper-trade-chatbot/be-pubsub/model/payment"
 	"github.com/paper-trade-chatbot/be-pubsub/payment/withdraw/kafkaWithdraw"
