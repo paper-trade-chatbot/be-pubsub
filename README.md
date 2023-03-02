@@ -126,12 +126,12 @@ import (
 	"reflect"
 	"sync"
 
-	rfPubsub "github.com/paper-trade-chatbot/be-pubsub"
+	bePubsub "github.com/paper-trade-chatbot/be-pubsub"
 	"github.com/paper-trade-chatbot/be-pubsub/model/payment"
 	"github.com/paper-trade-chatbot/be-pubsub/payment/withdraw/kafkaWithdraw"
 )
 
-var subscribers = []rfPubsub.Subcriber{}
+var subscribers = []bePubsub.Subcriber{}
 
 //Initialize
 // please register all instance creator of publisher here
